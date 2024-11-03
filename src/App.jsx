@@ -1,21 +1,24 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Login from "./screens/Login";
 import './fonts/index';
+import NavegacaoContextProvider from "./context/NavegacaoContextProvider";
+import Layout from "./screens/Layout";
+import ListaEstabelecimentos from "./screens/ListaEstabelecimentos";
 
 function App() {
-
-  // const loading = useState(false);
-
   return (
-    <>
+    <NavegacaoContextProvider>
       <BrowserRouter>
         <Routes>
-          <Route index path="*" element={<Login />} />
+          <Route path="*" element={<Login />} />
+
+          <Route element={<Layout />}>
+            <Route path="/Estabelecimentos" element={<ListaEstabelecimentos />} />
+          </Route>
         </Routes>
       </BrowserRouter>
-
-    </>
-  )
+    </NavegacaoContextProvider>
+  );
 }
 
-export default App
+export default App;

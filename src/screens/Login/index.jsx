@@ -1,8 +1,14 @@
 import { Box, Typography } from "@mui/material";
 import GrupoLogo from "../../components/GrupoLogo";
 import { StyledTextField, LoginButton, ContainerLogin } from "./styles";
+import { useNavegacao } from "../../context/NavegacaoContextProvider";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
+  const { setFezLogin } = useNavegacao();
+  
+  const navigate = useNavigate();
+
   return (
     <ContainerLogin>
       <GrupoLogo />
@@ -22,7 +28,7 @@ export default function Login() {
           variant="filled"
         />
       </Box>
-      <LoginButton  variant="contained">
+      <LoginButton  variant="contained" onClick={()=>{setFezLogin(true), navigate("/Estabelecimentos")}}>
         <Typography fontFamily={"Poppins"} fontWeight={500} variant="p" fontSize={'10px'} color="#1400ba" >
           Login
         </Typography>
