@@ -9,9 +9,12 @@ export default function Layout() {
     const { ativa } = useNavegacao();
 
     return (
-        <Box display="flex">
+        <Box display="flex" maxHeight="100vh">
             <NavegacaoLateral />
             <Box sx={{
+                overflow: 'hidden',
+                display: 'inline-flex',
+                flexDirection: 'column',
                 flexGrow: 1,
                 paddingTop: "20px",
                 paddingBottom: "40px",
