@@ -9,7 +9,9 @@ import ErrorReturn from "../models/ErrorReturn";
 
 const URL = "http://localhost:3000/api";
 
-axios.defaults.headers.common = {};
+axios.defaults.headers.common = {
+  'Authorization': 'Bearer ' + (localStorage.getItem("jwt") ?? ""),
+};
 
 const estadoInicial = {
   loading: true,
@@ -17,15 +19,15 @@ const estadoInicial = {
   error: null,
 };
 
-export function buscarEstabelecimentos() {
+export function buscarEstabelecimentos(filtroBusca) {
   const [state, dispatch] = useReducer(reduce, estadoInicial);
   useEffect(() => {
-    async function buscarEstabelecimentos() {
+    async function buscarEstabelecimentos(filtroBusca) {
       try {
         const apiUrlEstabelecimentos = URL + "/v1/recuperarMercados";
 
         await axios.all([
-          axios.get(apiUrlEstabelecimentos),
+          axios.post(apiUrlEstabelecimentos, filtroBusca),
         ]).then(axios.spread((estabelecimentos) => {
           let listaCompleta = estabelecimentos.data;
           dispatch({ type: TipoRetorno.SUCCESS, payload: listaCompleta });
@@ -39,8 +41,8 @@ export function buscarEstabelecimentos() {
 
     dispatch({ type: TipoRetorno.FETCH });
 
-    buscarEstabelecimentos();
-  }, []);
+    buscarEstabelecimentos(filtroBusca);
+  }, [filtroBusca]);
   return { state, dispatch };
 }
 

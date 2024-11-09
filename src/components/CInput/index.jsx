@@ -6,7 +6,7 @@ import { SearchTextField, StyledTextField } from "./styles";
 import SearchIcon from '@mui/icons-material/Search';
 
 
-const GerarInput = ({type, id, placeholder, helperText, dispatch = null, value = "", isDisabled = false, erros = {}}) => {
+const GerarInput = ({ type, id, placeholder, helperText, dispatch = null, value = "", isDisabled = false, erros = {}, onKeyDown = null }) => {
     let helperTextField = "";
     let temErro = (erros !== null && erros !== undefined && Object.hasOwn(erros, id));
     if (temErro) {
@@ -30,6 +30,7 @@ const GerarInput = ({type, id, placeholder, helperText, dispatch = null, value =
                 }
                 helperText={helperTextField}
                 onChange={(e) => { if (dispatch !== null) { dispatch({ type: 'INPUT', name: id, value: e.target.value }); } }}
+                onKeyDown={(e) => {if (onKeyDown !== undefined && onKeyDown !== null) {onKeyDown(e);}}}
                 slotProps={{
                     input: {
                         startAdornment: (
@@ -57,6 +58,7 @@ const GerarInput = ({type, id, placeholder, helperText, dispatch = null, value =
                 }
                 helperText={helperTextField}
                 onChange={(e) => { if (dispatch !== null) { dispatch({ type: 'INPUT', name: id, value: e.target.value }); } }}
+                onKeyDown={(e) => {if (onKeyDown !== undefined && onKeyDown !== null) {onKeyDown(e);}}}
             />);
     }
 
@@ -76,10 +78,11 @@ const GerarInput = ({type, id, placeholder, helperText, dispatch = null, value =
             }
             helperText={helperTextField}
             onChange={(e) => { if (dispatch !== null) { dispatch({ type: 'INPUT', name: id, value: e.target.value }); } }}
+            onKeyDown={(e) => {if (onKeyDown !== undefined && onKeyDown !== null) {onKeyDown(e);}}}
         />);
 };
 
-function CInput({ id = "", helperText = "", isDisabled = false, value = "", label = null, placeholder = "", error = null, type = null, sx = null, mask = null, dispatch = null }) {
+function CInput({ id = "", helperText = "", isDisabled = false, value = "", label = null, placeholder = "", error = null, type = null, sx = null, mask = null, dispatch = null, onKeyDown = null }) {
     return <>
         <GerarInput
             type={type}
@@ -89,7 +92,8 @@ function CInput({ id = "", helperText = "", isDisabled = false, value = "", labe
             dispatch={dispatch}
             value={value}
             isDisabled={isDisabled}
-            erros={error} />
+            erros={error}
+            onKeyDown={onKeyDown} />
     </>;
 }
 

@@ -6,9 +6,14 @@ import BookmarksIcon from '@mui/icons-material/Bookmarks';
 import AppsIcon from '@mui/icons-material/Apps';
 import NavegacaoItem from '../NavegacaoItem';
 import { useNavegacao } from '../../context/NavegacaoContextProvider';
+import LogoutIcon from '@mui/icons-material/Logout';
+import { useNavigate } from "react-router-dom";
 
 export default function NavegacaoLateral() {
-    const {ativa, setAtiva} = useNavegacao();
+    const { ativa, setAtiva, removerAcesso } = useNavegacao();
+
+    const navigate = useNavigate();
+
 
     return (
         <ContainerNavegacaoLateral style={{ width: 'auto', gap: 20 }} >
@@ -18,9 +23,28 @@ export default function NavegacaoLateral() {
             >
                 <ReorderIcon sx={{ height: 20 }} />
             </Container>
-            <NavegacaoItem icon={MapsHomeWorkIcon} label='Estabelecimentos' ativa={ativa} />
-            <NavegacaoItem icon={BookmarksIcon} label='Categorias' ativa={ativa} />
-            <NavegacaoItem icon={AppsIcon} label='Produtos' ativa={ativa} />
+
+            <NavegacaoItem icon={MapsHomeWorkIcon}
+                label='Estabelecimentos' ativa={ativa}
+                action={()=>{navigate("/Estabelecimentos")}}
+            />
+            <NavegacaoItem icon={BookmarksIcon}
+                label='Categorias'
+                ativa={ativa}
+                action={()=>{navigate("/Estabelecimentos")}}
+            />
+            <NavegacaoItem icon={AppsIcon}
+                label='Produtos'
+                ativa={ativa}
+                action={()=>{navigate("/Estabelecimentos")}}
+            />
+
+            <Container
+                sx={{ marginTop: 'auto', marginBottom: '20px' }}
+                onClick={() => removerAcesso()}
+            >
+                <LogoutIcon sx={{ height: 20 }} />
+            </Container>
         </ContainerNavegacaoLateral>
     );
 }

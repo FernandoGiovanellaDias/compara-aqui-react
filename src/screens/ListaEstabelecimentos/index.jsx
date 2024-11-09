@@ -1,14 +1,17 @@
 import { Box, CircularProgress, Typography } from "@mui/material";
-import { SearchTextField } from "../Login/styles";
-import SearchIcon from '@mui/icons-material/Search';
 import { buscarEstabelecimentos } from "../../Util/estabelecimentoUtils";
-import { useState } from "react";
+import { useReducer } from "react";
+import PropTypes from 'prop-types';
+import reducer from "../../Util";
+import FiltroBusca from "../../models/FiltroBusca";
+import CInput from "../../components/CInput";
 
 
 
-const RenderizarLista = (filtro = null) => {
 
-    const { state } = buscarEstabelecimentos();
+const RenderizarLista = ({ filtro = ""}) => {
+
+    const { state } = buscarEstabelecimentos(filtro);
     const { data, loading, error } = state;
 
     const lista = Array.isArray(data) ? data : [];
@@ -38,11 +41,11 @@ const RenderizarLista = (filtro = null) => {
         <>
             <Box sx={{ gap: '10px', display: 'inline-flex', flexDirection: 'column', overflow: 'auto' }} >
                 {
-                    lista.map((item, index) => (
+                    lista.map((item) => (
                         <>
-                            <Box key={index} sx={{ background: "#BDC0DD", paddingX: 2, paddingY: 2 }}>
+                            <Box key={item.id} sx={{ background: "#BDC0DD", paddingX: 2, paddingY: 2 }}>
                                 <Typography fontFamily={"Poppins"} fontWeight={300} variant="p" fontSize={'18px'} >
-                                    {index.name}
+                                    {item.name}
                                 </Typography>
                             </Box>
                         </>
@@ -55,30 +58,37 @@ const RenderizarLista = (filtro = null) => {
 
 export default function ListaEstabelecimentos() {
 
-    const [filtro, setFiltro] = useState("");
 
+    const [filtroBusca, dispatch] = useReducer(reducer, new FiltroBusca());
 
-
+    
     return (
         <>
             <Typography fontFamily={"Poppins"} fontWeight={500} variant="p" fontSize={'24px'} >
                 Estabelecimentos
             </Typography>
             <Box paddingTop={2} paddingBottom={2} >
-                <SearchTextField
-                    placeholder="Buscar Estabelecimento"
-                    slotProps={{
-                        input: {
-                            startAdornment: (
-                                <SearchIcon />
-                            ),
-                        }
-                    }}
+                <CInput
+                    id="filtro"
+                    value={filtroBusca.filtro}
+                    placeholder="Buscar estabelecimentos"
+                    dispatch={dispatch}
+                    type="busca"
                 />
             </Box>
 
-            <RenderizarLista filtro={filtro} />
+            <RenderizarLista filtro={filtroBusca} />
 
         </>
     );
 }
+
+
+
+RenderizarLista.propTypes = {
+    filtro: PropTypes.object,
+};
+RenderizarLista.defaultProps = {
+    filtro: "",
+};
+

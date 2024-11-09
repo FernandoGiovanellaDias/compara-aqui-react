@@ -1,6 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom"
 import Layout from "../../screens/Layout"
-import ListaEstabelecimentos from "../../screens/CadastroEstabelecimento"
+import ListaEstabelecimentos from "../../screens/ListaEstabelecimentos"
 
 function RoutesClientes() {
 

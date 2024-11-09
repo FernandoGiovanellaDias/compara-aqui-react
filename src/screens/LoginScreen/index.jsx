@@ -82,7 +82,7 @@ export default function LoginScreen() {
           <CInput
             id="senha"
             label="Senha"
-            type="password"
+            type="senha"
             value={login.senha}
             dispatch={dispatch}
             error={erros}
