@@ -1,4 +1,4 @@
-import { TextField } from "@mui/material";
+import { Box, Switch, TextField } from "@mui/material";
 import styled from "styled-components";
 
 export const StyledTextField = styled(TextField)({
@@ -81,5 +81,51 @@ export const SearchTextField = styled(TextField)({
         fontFamily: "Poppins, sans-serif",
         fontWeight: 500,
         fontSize: "10px",
+    },
+});
+
+
+export const StyledSwitchContainer = styled(Box)({
+    display: 'flex',
+    alignItems: 'center',
+    width: 'min-content',
+});
+
+
+
+export const CustomSwitch = styled(Switch)({
+    height: "auto !important",
+    width: "75px !important",
+    padding: 0,
+    display: 'flex',
+    '& .MuiSwitch-switchBase:hover': {
+        background: "none !important",
+    },
+    '& .MuiSwitch-track': {
+        width: '100%',
+        height: 28,
+        backgroundColor: '#afafdb',
+        borderRadius: 100,
+        opacity: 1,
+    },
+    '& .MuiSwitch-switchBase': {
+        padding: 0,
+        '&.Mui-checked': {
+            transform: 'translateX(37px)',
+            '& .MuiSwitch-thumb': {
+                backgroundColor: '#9cb7ff',
+                margin: "14px 14px",
+                marginLeft: 'auto',
+            },
+            '& + .MuiSwitch-track': {
+                backgroundColor: '#2944f3',
+            },
+        },
+    },
+    '& .MuiSwitch-thumb': {
+        width: 22,
+        height: 22,
+        backgroundColor: '#bbc2ff',
+        margin: "14px 14px",
     },
 });

@@ -1,52 +1,107 @@
-import { useState } from 'react';
+import { useReducer, useState } from 'react';
 import { Typography, Container } from '@mui/material';
 import CInput from '../../components/CInput';
-import { FormBox, ButtonContainer, StyledSwitchContainer } from './styles';
-import { ConfirmButton, CustomSwitch, ToDanyButton } from '../../assets/MeusComponentes';
+import { FormBox, ButtonContainer } from './styles';
+import { ConfirmButton, ToDanyButton } from '../../assets/MeusComponentes';
+import { useNavigate } from 'react-router-dom';
+import Estabelecimento from '../../models/Estabelecimento';
+import reducer from '../../Util';
+import { salvarEstabelecimento } from '../../Util/estabelecimentoUtils';
+import { TipoRetorno } from '../../Util/ReduceUtils';
+import Loading from '../../components/Loading';
+import { MsgError } from '../../components/MsgError';
 
 const CadastroEstabelecimento = () => {
-    const [status, setStatus] = useState(false);
-    const [nomeEstabelecimento, setNomeEstabelecimento] = useState("");
 
-    const handleStatusChange = () => {
-        setStatus(!status);
+    const navigate = useNavigate();
+
+    const [erros, setErros] = useState({});
+    const [error, setError] = useState("");
+
+    const [estabelecimento, dispatch] = useReducer(reducer, new Estabelecimento());
+    const [loading, setLoading] = useState(false);
+
+
+
+    const handlerSalvarEstabelecimento = (estabelecimento, callbackFunc) => {
+        setLoading(true);
+        console.log(JSON.stringify(estabelecimento));
+
+        let callback = ({ type, error, data }) => {
+            if (type == TipoRetorno.FAIL) {
+                setLoading(false);
+                if (data != undefined && data != null) {
+                    if (data.erros != undefined && data.erros != null && Object.keys(data.erros).length > 0) {
+                        setErros(data.erros);
+                        setError(null);
+                    }else if (data.error) {
+                        setError(data.message);
+                    }
+                } else if (error != undefined && error != null && Object.keys(error).length > 0) {
+                    setErros(error);
+                    setError(null);
+                }
+            } else {
+                setLoading(false);
+
+                if (callbackFunc != null) {
+                    callbackFunc(data.id);
+                }
+            }
+        };
+
+        salvarEstabelecimento(estabelecimento, callback);
+    }
+
+
+
+
+    const submitHandler = () => {
+        handlerSalvarEstabelecimento(estabelecimento, (id) => {
+            if (estabelecimento.id === null || estabelecimento.id === undefined || estabelecimento.id <= 0) {
+                navigate(`../${id}`);
+            }
+        });
     };
 
-    const handleNomeChange = (e) => {
-        setNomeEstabelecimento(e.target.value);
-    };
 
     return (
         <>
+            <Loading data={{ loading: loading }} />
             <Typography fontFamily={"Poppins"} fontWeight={500} variant="p" fontSize={'24px'} >
                 Cadastro de Estabelecimentos
             </Typography>
 
             <FormBox>
                 <Container sx={{ margin: '10px 0' }}>
-                    <StyledSwitchContainer>
-                        <CustomSwitch checked={status} onChange={handleStatusChange} />
-                        <Typography fontFamily={"Poppins"} fontWeight={500} variant="p" fontSize={'12px'} >
-                            Status
-                        </Typography>
-                    </StyledSwitchContainer>
+                    <CInput
+                        type="switch"
+                        id="status"
+                        label="Status"
+                        value={estabelecimento.status}
+                        dispatch={dispatch}
+                    />
                 </Container>
                 <Container sx={{ margin: '10px 0' }}>
                     <CInput
                         type="text"
-                        id="nomeEstabelecimento"
+                        id="name"
                         label="Nome do estabelecimento"
                         placeholder="Escreva o nome do estabelecimento"
-                        helperText="Supporting text"
-                        value={nomeEstabelecimento}
+                        helperText=""
+                        value={estabelecimento.name}
                         sx={{ width: '80%' }}
-                        onChange={handleNomeChange}
+                        dispatch={dispatch}
+                        error={erros}
                     />
+                </Container>
+                <Container sx={{ margin: '10px 0' }}>
+                    <MsgError error={error} />
                 </Container>
 
                 <Container sx={{ margin: '10px 0' }}>
                     <ButtonContainer>
-                        <ConfirmButton>
+                        <ConfirmButton onClick={() => { submitHandler() }}>
                             <Typography fontFamily={"Poppins"} fontWeight={500} variant="p" fontSize={'12px'} >
                                 Confirmar
                             </Typography>

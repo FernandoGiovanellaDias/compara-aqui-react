@@ -51,7 +51,7 @@ export function carregarEstabelecimento(id, defaultEstabelecimento = new Estabel
   useEffect(() => {
     async function carregarEstabelecimento(id) {
       try {
-        const apiUrlEstabelecimentos = URL + "/v1/Estabelecimentos/" + id;
+        const apiUrlEstabelecimentos = URL + "/v1/Mercados/" + id;
 
         await axios.all([
           axios.get(apiUrlEstabelecimentos)
@@ -81,14 +81,14 @@ export function carregarEstabelecimento(id, defaultEstabelecimento = new Estabel
 export function salvarEstabelecimento(estabelecimento, callback) {
   try {
     let eEstabelecimento = new Estabelecimento(estabelecimento);
-    const apiUrlEstabelecimentos = URL + "/v1/Estabelecimentos";
+    const apiUrlEstabelecimentos = URL + "/v1/Mercados";
 
     let listaReq = [];
 
     if (estabelecimento.id != null && estabelecimento.id != "" && estabelecimento.id !== 0) {
-      listaReq.push(axios.put(apiUrlEstabelecimentos + "/" + estabelecimento.id, eEstabelecimento));
+      listaReq.push(axios.put(apiUrlEstabelecimentos + "/" + estabelecimento.id, {mercado: eEstabelecimento}));
     } else {
-      listaReq.push(axios.post(apiUrlEstabelecimentos, eEstabelecimento));
+      listaReq.push(axios.post(apiUrlEstabelecimentos, {mercado: eEstabelecimento}));
     }
 
 
@@ -111,7 +111,7 @@ export function salvarEstabelecimento(estabelecimento, callback) {
 
 export function excluirEstabelecimento(estabelecimento, callback) {
   try {
-    const apiUrlEstabelecimentos = URL + "/v1/Estabelecimentos";
+    const apiUrlEstabelecimentos = URL + "/v1/Mercados";
 
     let listaReq = [];
     listaReq.push(axios.delete(apiUrlEstabelecimentos + "/" + estabelecimento.id));

@@ -33,9 +33,3 @@ export const StyledTypography = styled(Typography)({
     fontFamily: 'Roboto, sans-serif',
     textAlign: 'left',
 });
-
-export const StyledSwitchContainer = styled(Box)({
-    display: 'flex',
-    alignItems: 'center',
-    width: 'min-content',
-});

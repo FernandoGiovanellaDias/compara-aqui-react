@@ -1,8 +1,8 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 
-import { Box } from "@mui/material";
-import { SearchTextField, StyledTextField } from "./styles";
+import { Box, Typography } from "@mui/material";
+import { CustomSwitch, SearchTextField, StyledSwitchContainer, StyledTextField } from "./styles";
 import SearchIcon from '@mui/icons-material/Search';
 
 
@@ -14,6 +14,26 @@ const GerarInput = ({ type, id, placeholder, helperText, dispatch = null, value 
     } else if (helperText !== undefined && helperText !== null) {
         helperTextField = helperText;
     }
+    if (type == "switch") {
+        return (
+            <StyledSwitchContainer>
+                <CustomSwitch
+                    id={id}
+                    aria-label={placeholder}
+                    checked={value}
+                    onChange={(e) => {
+                        if (dispatch !== null) {
+                            dispatch({ type: 'INPUT', name: id, value: e.target.checked });
+                        }
+                    }}
+                />
+                <Typography fontFamily={"Poppins"} fontWeight={500} variant="p" fontSize={'12px'}>
+                    {label}
+                </Typography>
+            </StyledSwitchContainer>
+        );
+    }
+
     if (type == "busca") {
         return (
             <SearchTextField

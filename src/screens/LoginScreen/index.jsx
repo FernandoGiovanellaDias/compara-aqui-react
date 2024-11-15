@@ -10,19 +10,9 @@ import { realizarLogin } from "../../Util/loginUtils";
 import reducer from "../../Util";
 import Login from "../../models/Login";
 import CInput from "../../components/CInput";
-import PropTypes from 'prop-types';
+import { MsgError } from "../../components/MsgError";
 
-const MsgError = ({ error }) => {
-  if (!error || error.length === 0) {
-    return <></>;
-  }
 
-  return (
-    <Typography marginTop={2} fontFamily={"Poppins"} fontWeight={500} fontSize="12px" color="#b32222">
-      {error}
-    </Typography>
-  );
-};
 
 export default function LoginScreen() {
 
@@ -104,9 +94,3 @@ export default function LoginScreen() {
     </>
   );
 }
-
-
-
-MsgError.propTypes = {
-  error: PropTypes.string,
-};
