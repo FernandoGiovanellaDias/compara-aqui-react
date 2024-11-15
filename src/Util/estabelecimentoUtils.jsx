@@ -78,7 +78,7 @@ export function carregarEstabelecimento(id, defaultEstabelecimento = new Estabel
 }
 
 
-export function enviarEstabelecimento(estabelecimento, callback) {
+export function salvarEstabelecimento(estabelecimento, callback) {
   try {
     let eEstabelecimento = new Estabelecimento(estabelecimento);
     const apiUrlEstabelecimentos = URL + "/v1/Estabelecimentos";
