@@ -21,6 +21,7 @@ const GerarInput = ({ type, id, placeholder, helperText, dispatch = null, value 
                     id={id}
                     aria-label={placeholder}
                     checked={value}
+                    value={(value) ? "on" : "off" }
                     onChange={(e) => {
                         if (dispatch !== null) {
                             dispatch({ type: 'INPUT', name: id, value: e.target.checked });
@@ -39,7 +40,7 @@ const GerarInput = ({ type, id, placeholder, helperText, dispatch = null, value 
             <SearchTextField
                 label={label}
                 id={id} disabled={isDisabled}
-                defaultValue={value}
+                value={value}
                 placeholder={placeholder}
                 aria-label={placeholder}
                 sx={[sx,
@@ -69,7 +70,7 @@ const GerarInput = ({ type, id, placeholder, helperText, dispatch = null, value 
                 variant="filled"
                 id={id} disabled={isDisabled}
                 type="password"
-                defaultValue={value}
+                value={value}
                 placeholder={placeholder}
                 aria-label={placeholder}
                 sx={[sx,
@@ -90,7 +91,7 @@ const GerarInput = ({ type, id, placeholder, helperText, dispatch = null, value 
             label={label}
             variant="filled"
             id={id} disabled={isDisabled}
-            defaultValue={value}
+            value={value}
             placeholder={placeholder}
             aria-label={placeholder}
             sx={[sx,

@@ -10,9 +10,11 @@ function RoutesClientes() {
             <BrowserRouter>
                 <Routes >
                     <Route element={<Layout />}>
-                    <Route path="/*" element={<></>} />
-                    <Route path="/Estabelecimentos" element={<ListaEstabelecimentos />} />
-                    <Route path="/CadastroEstabelecimento" element={<CadastroEstabelecimento />} />
+                        <Route path="/*" element={<></>} />
+                        <Route path="/Estabelecimentos" element={<ListaEstabelecimentos />} />
+                        <Route path="/CadastroEstabelecimento" element={<CadastroEstabelecimento />} >
+                            <Route path=":id"/>
+                        </Route>
                     </Route>
                 </Routes>
             </BrowserRouter>

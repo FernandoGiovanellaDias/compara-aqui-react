@@ -3,8 +3,6 @@ import { Button } from "@mui/material";
 import styled from "styled-components";
 import { keyframes } from "@emotion/react";
 
-import Switch from '@mui/material/Switch';
-
 
 export const enterKeyframe = keyframes`
   0% {
@@ -54,6 +52,31 @@ export const ToDanyButton = styled(Button)({
 
     '&& .MuiTouchRipple-child': {
         backgroundColor: '#ff0000 !important',
+    },
+
+    '&& .MuiTouchRipple-rippleVisible': {
+        opacity: 0.5,
+        animation: `${enterKeyframe} 550ms ease-in-out !important`,
+    },
+});
+
+
+export const NormalButton = styled(Button)({
+    padding: '8px 20px',
+    minWidth: '120px !important',
+    borderRadius: '10px !important',
+    color: '#3d416c !important',
+    fontSize: '16px',
+    textTransform: 'none',
+    backgroundColor: '#e9ebff !important',
+    '&:hover': {
+        color: '#9b9ebe !important',
+        backgroundColor: '#ebedff !important',
+        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
+    },
+
+    '&& .MuiTouchRipple-child': {
+        backgroundColor: '#9b9ebe !important',
     },
 
     '&& .MuiTouchRipple-rippleVisible': {

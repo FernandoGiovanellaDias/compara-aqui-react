@@ -5,11 +5,13 @@ import PropTypes from 'prop-types';
 import reducer from "../../Util";
 import FiltroBusca from "../../models/FiltroBusca";
 import CInput from "../../components/CInput";
+import { NormalButton } from "../../assets/MeusComponentes";
+import { useNavigate } from "react-router-dom";
 
 
 
 
-const RenderizarLista = ({ filtro = ""}) => {
+const RenderizarLista = ({ filtro = "" }) => {
 
     const { state } = buscarEstabelecimentos(filtro);
     const { data, loading, error } = state;
@@ -61,13 +63,14 @@ export default function ListaEstabelecimentos() {
 
     const [filtroBusca, dispatch] = useReducer(reducer, new FiltroBusca());
 
-    
+    const navigate = useNavigate();
+
     return (
         <>
             <Typography fontFamily={"Poppins"} fontWeight={500} variant="p" fontSize={'24px'} >
                 Estabelecimentos
             </Typography>
-            <Box paddingTop={2} paddingBottom={2} >
+            <Box paddingTop={2} paddingBottom={2} gapC >
                 <CInput
                     id="filtro"
                     value={filtroBusca.filtro}
@@ -75,6 +78,11 @@ export default function ListaEstabelecimentos() {
                     dispatch={dispatch}
                     type="busca"
                 />
+                <NormalButton sx={{marginLeft:2}} onClick={()=>{navigate('/CadastroEstabelecimento')}}>
+                    <Typography fontFamily={"Poppins"} fontWeight={500} variant="p" fontSize={'12px'} >
+                        Novo Estabelecimento
+                    </Typography>
+                </NormalButton>
             </Box>
 
             <RenderizarLista filtro={filtroBusca} />

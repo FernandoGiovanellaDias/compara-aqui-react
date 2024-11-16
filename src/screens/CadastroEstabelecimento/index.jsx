@@ -1,24 +1,38 @@
-import { useReducer, useState } from 'react';
+import { useEffect, useReducer, useState } from 'react';
 import { Typography, Container } from '@mui/material';
 import CInput from '../../components/CInput';
 import { FormBox, ButtonContainer } from './styles';
 import { ConfirmButton, ToDanyButton } from '../../assets/MeusComponentes';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Estabelecimento from '../../models/Estabelecimento';
 import reducer from '../../Util';
-import { salvarEstabelecimento } from '../../Util/estabelecimentoUtils';
+import { carregarEstabelecimento, salvarEstabelecimento } from '../../Util/estabelecimentoUtils';
 import { TipoRetorno } from '../../Util/ReduceUtils';
 import Loading from '../../components/Loading';
 import { MsgError } from '../../components/MsgError';
 
 const CadastroEstabelecimento = () => {
 
+    const { id } = useParams();
+
     const navigate = useNavigate();
 
     const [erros, setErros] = useState({});
     const [error, setError] = useState("");
 
+
     const [estabelecimento, dispatch] = useReducer(reducer, new Estabelecimento());
+
+
+
+    useEffect(() => {
+        carregarEstabelecimento(id, (data) => {
+            dispatch({ type: "MANY_VALUES", values: new Estabelecimento(data.data) });
+        });
+    }, []);
+
+
+
     const [loading, setLoading] = useState(false);
 
 
@@ -34,7 +48,7 @@ const CadastroEstabelecimento = () => {
                     if (data.erros != undefined && data.erros != null && Object.keys(data.erros).length > 0) {
                         setErros(data.erros);
                         setError(null);
-                    }else if (data.error) {
+                    } else if (data.error) {
                         setError(data.message);
                     }
                 } else if (error != undefined && error != null && Object.keys(error).length > 0) {
@@ -69,7 +83,7 @@ const CadastroEstabelecimento = () => {
         <>
             <Loading data={{ loading: loading }} />
             <Typography fontFamily={"Poppins"} fontWeight={500} variant="p" fontSize={'24px'} >
-                Cadastro de Estabelecimentos
+                {!id ? "Cadastro" : "Edição"} de Estabelecimento
             </Typography>
 
             <FormBox>

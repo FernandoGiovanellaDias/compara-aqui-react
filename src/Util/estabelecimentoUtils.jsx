@@ -46,35 +46,20 @@ export function buscarEstabelecimentos(filtroBusca) {
   return { state, dispatch };
 }
 
-export function carregarEstabelecimento(id, defaultEstabelecimento = new Estabelecimento()) {
-  const [state, dispatch] = useReducer(reduce, estadoInicial);
-  useEffect(() => {
-    async function carregarEstabelecimento(id) {
-      try {
-        const apiUrlEstabelecimentos = URL + "/v1/Mercados/" + id;
+export async function carregarEstabelecimento(id,  callback = ({data})=>{}) {
+  try {
+    const apiUrlEstabelecimentos = URL + "/v1/Mercados/" + id;
 
-        await axios.all([
-          axios.get(apiUrlEstabelecimentos)
-        ]).then(axios.spread((rEstabelecimento) => {
-          let estabelecimento = new Estabelecimento();
-          estabelecimento.load(rEstabelecimento.data);
-          dispatch({ type: TipoRetorno.SUCCESS, payload: estabelecimento });
-        })).catch(error => {
-          dispatch({ type: TipoRetorno.FAIL });
-        });
-      } catch (err) {
-        dispatch({ type: TipoRetorno.FAIL });
-      }
-    }
-
-    if (id != null) {
-      dispatch({ type: TipoRetorno.FETCH, payload: defaultEstabelecimento });
-      carregarEstabelecimento(id);
-    } else {
-      dispatch({ type: TipoRetorno.SUCCESS, payload: defaultEstabelecimento });
-    }
-  }, []);
-  return state;
+    await axios.all([
+      axios.get(apiUrlEstabelecimentos)
+    ]).then(axios.spread((rEstabelecimento) => {
+      callback({data: rEstabelecimento.data});
+    })).catch(error => {
+      callback({data: null});
+    });
+  } catch (err) {
+    callback({data: null});
+  }
 }
 
 
@@ -86,9 +71,9 @@ export function salvarEstabelecimento(estabelecimento, callback) {
     let listaReq = [];
 
     if (estabelecimento.id != null && estabelecimento.id != "" && estabelecimento.id !== 0) {
-      listaReq.push(axios.put(apiUrlEstabelecimentos + "/" + estabelecimento.id, {mercado: eEstabelecimento}));
+      listaReq.push(axios.put(apiUrlEstabelecimentos + "/" + estabelecimento.id, { mercado: eEstabelecimento }));
     } else {
-      listaReq.push(axios.post(apiUrlEstabelecimentos, {mercado: eEstabelecimento}));
+      listaReq.push(axios.post(apiUrlEstabelecimentos, { mercado: eEstabelecimento }));
     }
 
 
