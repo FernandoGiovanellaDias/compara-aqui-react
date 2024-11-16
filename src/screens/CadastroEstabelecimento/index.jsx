@@ -19,21 +19,43 @@ const CadastroEstabelecimento = () => {
 
     const [erros, setErros] = useState({});
     const [error, setError] = useState("");
+    const [erroAoCarregar, setErroAoCarregar] = useState("");
+    const [loading, setLoading] = useState(false);
+
+
+
+    const { loading: loadingDados, data: dataDados, error: errorDados } = carregarEstabelecimento(id);
 
 
     const [estabelecimento, dispatch] = useReducer(reducer, new Estabelecimento());
 
 
-
     useEffect(() => {
-        carregarEstabelecimento(id, (data) => {
-            dispatch({ type: "MANY_VALUES", values: new Estabelecimento(data.data) });
-        });
-    }, []);
+        if (id) {
+            if (!loadingDados && !errorDados && !dataDados.error) {
+                setErroAoCarregar("");
+                dispatch({ type: "MANY_VALUES", values: dataDados.estabelecimento });
+            } else {
+                setErroAoCarregar(dataDados.message ?? "Falha ao recuperar os dados do estabelecimento");
+            }
+        }
+    }, [loadingDados]);
+
+    if (erroAoCarregar) {
+        return (<>
+            <Loading data={{ loading: loading }} />
+            <Typography fontFamily={"Poppins"} fontWeight={500} variant="p" fontSize={'24px'} >
+                {!id ? "Cadastro" : "Edição"} de Estabelecimento
+            </Typography>
+            <FormBox>
+                <Container sx={{ margin: '10px 0' }}>
+                    <MsgError error={erroAoCarregar} />
+                </Container>
+            </FormBox>
+        </>);
+    }
 
 
-
-    const [loading, setLoading] = useState(false);
 
 
 
@@ -71,9 +93,9 @@ const CadastroEstabelecimento = () => {
 
 
     const submitHandler = () => {
-        handlerSalvarEstabelecimento(estabelecimento, (id) => {
+        handlerSalvarEstabelecimento(estabelecimento, () => {
             if (estabelecimento.id === null || estabelecimento.id === undefined || estabelecimento.id <= 0) {
-                navigate(`../${id}`);
+                navigate(-1);
             }
         });
     };

@@ -46,20 +46,35 @@ export function buscarEstabelecimentos(filtroBusca) {
   return { state, dispatch };
 }
 
-export async function carregarEstabelecimento(id,  callback = ({data})=>{}) {
-  try {
-    const apiUrlEstabelecimentos = URL + "/v1/Mercados/" + id;
+export function carregarEstabelecimento(id, defaultEstabelecimento = new Estabelecimento()) {
+  const [state, dispatch] = useReducer(reduce, estadoInicial);
+  useEffect(() => {
+    async function carregarEstabelecimento(id) {
+      try {
+        const apiUrlEstabelecimentos = URL + "/v1/Mercados/" + id;
 
-    await axios.all([
-      axios.get(apiUrlEstabelecimentos)
-    ]).then(axios.spread((rEstabelecimento) => {
-      callback({data: rEstabelecimento.data});
-    })).catch(error => {
-      callback({data: null});
-    });
-  } catch (err) {
-    callback({data: null});
-  }
+        await axios.all([
+          axios.get(apiUrlEstabelecimentos)
+        ]).then(axios.spread((rEstabelecimento) => {
+          let dados = rEstabelecimento.data;
+          dados.estabelecimento = new Estabelecimento(rEstabelecimento.data.estabelecimento ?? {});
+          dispatch({ type: TipoRetorno.SUCCESS, payload: dados });
+        })).catch(error => {
+          dispatch({ type: TipoRetorno.FAIL });
+        });
+      } catch (err) {
+        dispatch({ type: TipoRetorno.FAIL });
+      }
+    }
+
+    if (id != null) {
+      dispatch({ type: TipoRetorno.FETCH, payload: defaultEstabelecimento });
+      carregarEstabelecimento(id);
+    } else {
+      dispatch({ type: TipoRetorno.SUCCESS, payload: defaultEstabelecimento });
+    }
+  }, []);
+  return state;
 }
 
 
