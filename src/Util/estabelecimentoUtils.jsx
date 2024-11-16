@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable no-unused-vars */
 
-import { useEffect, useReducer } from "react";
+import { useEffect, useReducer, useState } from "react";
 import axios from "axios";
 import { TipoRetorno, reduce } from "./ReduceUtils";
 import Estabelecimento from "../models/Estabelecimento";
@@ -21,6 +21,8 @@ const estadoInicial = {
 
 export function buscarEstabelecimentos(filtroBusca) {
   const [state, dispatch] = useReducer(reduce, estadoInicial);
+  const [reload, setReload] = useState(0);
+  const actionReload = ()=>{setReload(reload+1);};
   useEffect(() => {
     async function buscarEstabelecimentos(filtroBusca) {
       try {
@@ -42,8 +44,8 @@ export function buscarEstabelecimentos(filtroBusca) {
     dispatch({ type: TipoRetorno.FETCH });
 
     buscarEstabelecimentos(filtroBusca);
-  }, [filtroBusca]);
-  return { state, dispatch };
+  }, [filtroBusca, reload]);
+  return { state, dispatch, actionReload };
 }
 
 export function carregarEstabelecimento(id, defaultEstabelecimento = new Estabelecimento()) {

@@ -41,7 +41,7 @@ const CadastroEstabelecimento = () => {
         }
     }, [loadingDados]);
 
-    if (erroAoCarregar) {
+    if (!loadingDados && erroAoCarregar) {
         return (<>
             <Loading data={{ loading: loading }} />
             <Typography fontFamily={"Poppins"} fontWeight={500} variant="p" fontSize={'24px'} >
