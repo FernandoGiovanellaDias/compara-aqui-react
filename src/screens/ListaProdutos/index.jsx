@@ -1,5 +1,5 @@
 import { Box, CircularProgress, Typography } from "@mui/material";
-import { buscarCategorias, excluirCategoria } from "../../Util/categoriaUtils";
+import { buscarProdutos, excluirProduto } from "../../Util/produtoUtils";
 import { useReducer, useState } from "react";
 import PropTypes from 'prop-types';
 import reducer from "../../Util";
@@ -38,8 +38,7 @@ export const RenderizarLista = ({ lista, navigate, loading, error, handleApagarR
     return (
         <>
             <ConfirmDialog
-                title="Deseja realmente apagar a categoria?"
-                message="Ao apagar será removido todos os produtos relacionados"
+                title="Deseja realmente apagar o produto?"
                 onConfirm={handleApagarRegistro}
                 onCancel={handleCancelar}
                 open={abrirConfirmDialog} />
@@ -47,6 +46,13 @@ export const RenderizarLista = ({ lista, navigate, loading, error, handleApagarR
                 <Typography sx={{ flex: 3, overflow: "auto", paddingY: 1 }} fontFamily={"Poppins"} fontWeight={300} variant="p" fontSize={'18px'} >
                     Nome
                 </Typography>
+                <Typography sx={{ flex: 2, paddingY: 1, paddingLeft: 1, borderLeft: "1px #0f154f57 solid" }} noWrap fontFamily={"Poppins"} fontWeight={300} variant="p" fontSize={'18px'} >
+                    Mercado
+                </Typography>
+                <Typography sx={{ flex: 1, paddingY: 1, paddingLeft: 1, borderLeft: "1px #0f154f57 solid" }} noWrap fontFamily={"Poppins"} fontWeight={300} variant="p" fontSize={'18px'} >
+                    Categoria
+                </Typography>
+
                 <div style={{ display: "inline-flex", width: "81px", alignItems: "center" }}>
                     <Typography sx={{ flex: 1, paddingY: 1, paddingLeft: 1, borderLeft: "1px #0f154f57 solid" }} noWrap fontFamily={"Poppins"} fontWeight={300} variant="p" fontSize={'18px'} >
                         Ações
@@ -57,13 +63,19 @@ export const RenderizarLista = ({ lista, navigate, loading, error, handleApagarR
                 {
                     lista.map((item) => (
                         <>
-                            <Box key={item.id} sx={{ background: "#BDC0DD", paddingX: 2, paddingY: 2, display: 'inline-flex' }}>
-                                <Typography sx={{ flex: 1, overflow: "auto" }} fontFamily={"Poppins"} fontWeight={300} variant="p" fontSize={'18px'} >
-                                    {item.title}
+                            <Box key={item.id} sx={{ background: "#BDC0DD", paddingX: 2, display: 'inline-flex' }}>
+                                <Typography sx={{ flex: 3, overflow: "auto", paddingY: 2 }} fontFamily={"Poppins"} fontWeight={300} variant="p" fontSize={'18px'} >
+                                    {item.name}
+                                </Typography>
+                                <Typography sx={{ flex: 2, paddingY: 2, paddingLeft: 1, borderLeft: "1px #0f154f57 solid" }} noWrap fontFamily={"Poppins"} fontWeight={300} variant="p" fontSize={'18px'} >
+                                    {item.mercado?.name ?? ""}
+                                </Typography>
+                                <Typography sx={{ flex: 1, paddingY: 2, paddingLeft: 1, borderLeft: "1px #0f154f57 solid" }} noWrap fontFamily={"Poppins"} fontWeight={300} variant="p" fontSize={'18px'} >
+                                    {item.categoria?.title ?? ""}
                                 </Typography>
 
                                 <div style={{ display: "inline-flex", gap: 10, alignItems: "center" }}>
-                                    <ActionButton onClick={() => { navigate("../CadastroCategoria/" + item.id) }}>
+                                    <ActionButton onClick={() => { navigate("../CadastroProduto/" + item.id) }}>
                                         <EditIcon sx={{ fontSize: 14 }} />
                                     </ActionButton>
                                     <ActionButton onClick={() => { handleAbrirConfirmDialog(item); }}>
@@ -79,7 +91,7 @@ export const RenderizarLista = ({ lista, navigate, loading, error, handleApagarR
     );
 }
 
-export default function ListaCategorias() {
+export default function ListaProdutos() {
 
     const navigate = useNavigate();
 
@@ -88,7 +100,7 @@ export default function ListaCategorias() {
     const [itemSelecionado, setItemSelecionado] = useState(null);
 
 
-    const { state, actionReload } = buscarCategorias(filtroBusca);
+    const { state, actionReload } = buscarProdutos(filtroBusca);
     const { data, loading, error } = state;
     const lista = Array.isArray(data) ? data : [];
 
@@ -99,7 +111,7 @@ export default function ListaCategorias() {
     };
 
     const handleApagarRegistro = () => {
-        excluirCategoria(itemSelecionado, () => {
+        excluirProduto(itemSelecionado, () => {
             setAbrirConfirmDialog(false);
             actionReload();
         });
@@ -113,20 +125,20 @@ export default function ListaCategorias() {
     return (
         <>
             <Typography fontFamily={"Poppins"} fontWeight={500} variant="p" fontSize={'24px'} >
-                Categorias
+                Produtos
             </Typography>
             <Box paddingTop={2} paddingBottom={2} gapC >
                 <CInput
                     id="filtro"
                     value={filtroBusca.filtro}
-                    placeholder="Buscar categorias"
+                    placeholder="Buscar produtos"
                     dispatch={dispatch}
                     type="busca"
                 />
-                <NormalButton sx={{ marginLeft: 2 }} onClick={() => { navigate('/CadastroCategoria') }}>
+                <NormalButton sx={{ marginLeft: 2 }} onClick={() => { navigate('/CadastroProduto') }}>
                     <AddIcon sx={{ fontSize: 14, marginRight: 1 }} />
                     <Typography fontFamily={"Poppins"} fontWeight={500} variant="p" fontSize={'12px'} >
-                        Nova Categoria
+                        Novo Produto
                     </Typography>
                 </NormalButton>
             </Box>

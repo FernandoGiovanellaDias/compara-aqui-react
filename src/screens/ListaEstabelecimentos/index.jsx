@@ -43,6 +43,16 @@ export const RenderizarLista = ({ lista, navigate, loading, error, handleApagarR
                 onConfirm={handleApagarRegistro}
                 onCancel={handleCancelar}
                 open={abrirConfirmDialog} />
+            <Box sx={{ background: "#aaadd1", paddingX: 2, marginBottom: 1, display: 'inline-flex' }}>
+                <Typography sx={{ flex: 3, overflow: "auto", paddingY: 1 }} fontFamily={"Poppins"} fontWeight={300} variant="p" fontSize={'18px'} >
+                    Nome
+                </Typography>
+                <div style={{ display: "inline-flex", width: "81px", alignItems: "center" }}>
+                    <Typography sx={{ flex: 1, paddingY: 1, paddingLeft: 1, borderLeft: "1px #0f154f57 solid" }} noWrap fontFamily={"Poppins"} fontWeight={300} variant="p" fontSize={'18px'} >
+                        Ações
+                    </Typography>
+                </div>
+            </Box>
             <Box sx={{ gap: '10px', display: 'inline-flex', flexDirection: 'column', overflow: 'auto' }} >
                 {
                     lista.map((item) => (

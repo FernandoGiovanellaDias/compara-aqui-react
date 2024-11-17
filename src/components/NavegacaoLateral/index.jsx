@@ -36,7 +36,7 @@ export default function NavegacaoLateral() {
             <NavegacaoItem icon={AppsIcon}
                 label='Produtos'
                 ativa={ativa}
-                action={()=>{navigate("/Estabelecimentos")}}
+                action={()=>{navigate("/Produtos")}}
             />
 
             <Container

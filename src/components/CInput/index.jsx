@@ -1,12 +1,28 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 
-import { Box, Typography } from "@mui/material";
+import { Box, MenuItem, Select, Typography } from "@mui/material";
 import { CustomSwitch, SearchTextField, StyledSwitchContainer, StyledTextField } from "./styles";
 import SearchIcon from '@mui/icons-material/Search';
 
+export const formatDinheiro = (value) => {
+    if (value === null || value === undefined || value === "") return "";
+    if (typeof value === "string") {
+        value = parseDinheiro(value);
+    }
+    return new Intl.NumberFormat("pt-BR", {
+        style: "currency",
+        currency: "BRL",
+    }).format(value);
+};
 
-const GerarInput = ({ type, id, placeholder, helperText, dispatch = null, value = "", isDisabled = false, erros = {}, onKeyDown = null, sx = {}, label = "" }) => {
+export const parseDinheiro = (value) => {
+    if (value === null || value === undefined || value === "") return "";
+    return Number(`${value}`.replace(/\D/g, "")) / 100;
+};
+
+
+const GerarInput = ({ type, id, placeholder, helperText, dispatch = null, value = "", isDisabled = false, erros = {}, onKeyDown = null, sx = {}, label = "", lista = [], onRenderTextItem = (it) => { } }) => {
     let helperTextField = "";
     let temErro = (erros !== null && erros !== undefined && Object.hasOwn(erros, id));
     if (temErro) {
@@ -14,6 +30,48 @@ const GerarInput = ({ type, id, placeholder, helperText, dispatch = null, value 
     } else if (helperText !== undefined && helperText !== null) {
         helperTextField = helperText;
     }
+    if (type === "select") {
+        return (
+            <StyledTextField
+                select
+                variant="filled"
+                id={id}
+                displayEmpty
+                value={value}
+                disabled={isDisabled}
+                placeholder={placeholder}
+                label={label}
+                aria-label={placeholder}
+                onChange={(e) => {
+                    if (dispatch !== null) {
+                        dispatch({ type: 'INPUT', name: id, value: e.target.value });
+                    }
+                }}
+                helperText={helperTextField}
+                sx={[sx,
+                    temErro ? {
+                        "& .MuiFormHelperText-root": {
+                            color: "#b32222"
+                        }
+                    } : {}
+                ]}
+            >
+                <MenuItem value={null}>
+                    <Typography fontFamily={"Poppins"} fontWeight={500} fontSize={'12px'}>
+                        Selecione
+                    </Typography>
+                </MenuItem>
+                {(lista ?? []).map((item) => (
+                    <MenuItem key={item.id} value={item.id}>
+                        <Typography fontFamily={"Poppins"} fontWeight={500} fontSize={'12px'}>
+                            {onRenderTextItem(item)}
+                        </Typography>
+                    </MenuItem>
+                ))}
+            </StyledTextField>
+        );
+    }
+
     if (type == "switch") {
         return (
             <StyledSwitchContainer>
@@ -21,7 +79,7 @@ const GerarInput = ({ type, id, placeholder, helperText, dispatch = null, value 
                     id={id}
                     aria-label={placeholder}
                     checked={value}
-                    value={(value) ? "on" : "off" }
+                    value={(value) ? "on" : "off"}
                     onChange={(e) => {
                         if (dispatch !== null) {
                             dispatch({ type: 'INPUT', name: id, value: e.target.checked });
@@ -86,6 +144,31 @@ const GerarInput = ({ type, id, placeholder, helperText, dispatch = null, value 
             />);
     }
 
+    if (type == "price") {
+        return (
+            <StyledTextField
+                label={label}
+                variant="filled"
+                id={id} disabled={isDisabled}
+                value={formatDinheiro(value)}
+                placeholder={placeholder}
+                aria-label={placeholder}
+                helperText={helperTextField}
+                InputProps={{
+                    inputProps: { maxLength: 17 },
+                }}
+                sx={[sx,
+                    temErro ? {
+                        "& .MuiFormHelperText-root": {
+                            color: "#b32222"
+                        }
+                    } : {}
+                ]}
+                onChange={(e) => { if (dispatch !== null) { dispatch({ type: 'INPUT', name: id, value: parseDinheiro(e.target.value) }); } }}
+                onKeyDown={(e) => { if (onKeyDown !== undefined && onKeyDown !== null) { onKeyDown(e); } }}
+            />);
+    }
+
     return (
         <StyledTextField
             label={label}
@@ -94,6 +177,7 @@ const GerarInput = ({ type, id, placeholder, helperText, dispatch = null, value 
             value={value}
             placeholder={placeholder}
             aria-label={placeholder}
+            helperText={helperTextField}
             sx={[sx,
                 temErro ? {
                     "& .MuiFormHelperText-root": {
@@ -101,13 +185,12 @@ const GerarInput = ({ type, id, placeholder, helperText, dispatch = null, value 
                     }
                 } : {}
             ]}
-            helperText={helperTextField}
             onChange={(e) => { if (dispatch !== null) { dispatch({ type: 'INPUT', name: id, value: e.target.value }); } }}
             onKeyDown={(e) => { if (onKeyDown !== undefined && onKeyDown !== null) { onKeyDown(e); } }}
         />);
 };
 
-function CInput({ id = "", helperText = "", isDisabled = false, value = "", label = null, placeholder = "", error = null, type = null, sx = null, mask = null, dispatch = null, onKeyDown = null }) {
+function CInput({ id = "", helperText = "", isDisabled = false, value = "", label = null, placeholder = "", error = null, type = null, sx = null, mask = null, dispatch = null, onKeyDown = null, lista = [], onRenderTextItem = (it) => { } }) {
     return <>
         <GerarInput
             type={type}
@@ -120,6 +203,8 @@ function CInput({ id = "", helperText = "", isDisabled = false, value = "", labe
             value={value}
             isDisabled={isDisabled}
             erros={error}
+            lista={lista}
+            onRenderTextItem={onRenderTextItem}
             onKeyDown={onKeyDown} />
     </>;
 }
