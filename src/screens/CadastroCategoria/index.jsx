@@ -4,14 +4,14 @@ import CInput from '../../components/CInput';
 import { FormBox, ButtonContainer } from './styles';
 import { ConfirmButton, ToDanyButton } from '../../assets/MeusComponentes';
 import { useNavigate, useParams } from 'react-router-dom';
-import Estabelecimento from '../../models/Estabelecimento';
+import Categoria from '../../models/Categoria';
 import reducer from '../../Util';
-import { carregarEstabelecimento, salvarEstabelecimento } from '../../Util/estabelecimentoUtils';
+import { carregarCategoria, salvarCategoria } from '../../Util/categoriaUtils';
 import { TipoRetorno } from '../../Util/ReduceUtils';
 import Loading from '../../components/Loading';
 import { MsgError } from '../../components/MsgError';
 
-const CadastroEstabelecimento = () => {
+const CadastroCategoria = () => {
 
     const { id } = useParams();
 
@@ -24,19 +24,19 @@ const CadastroEstabelecimento = () => {
 
 
 
-    const { loading: loadingDados, data: dataDados, error: errorDados } = carregarEstabelecimento(id);
+    const { loading: loadingDados, data: dataDados, error: errorDados } = carregarCategoria(id);
 
 
-    const [estabelecimento, dispatch] = useReducer(reducer, new Estabelecimento());
+    const [categoria, dispatch] = useReducer(reducer, new Categoria());
 
 
     useEffect(() => {
         if (id) {
             if (!loadingDados && !errorDados && !dataDados.error) {
                 setErroAoCarregar("");
-                dispatch({ type: "MANY_VALUES", values: dataDados.estabelecimento });
+                dispatch({ type: "MANY_VALUES", values: dataDados.categoria });
             } else {
-                setErroAoCarregar(dataDados.message ?? "Falha ao recuperar os dados do estabelecimento");
+                setErroAoCarregar(dataDados.message ?? "Falha ao recuperar os dados da categoria");
             }
         }
     }, [loadingDados]);
@@ -45,7 +45,7 @@ const CadastroEstabelecimento = () => {
         return (<>
             <Loading data={{ loading: loading }} />
             <Typography fontFamily={"Poppins"} fontWeight={500} variant="p" fontSize={'24px'} >
-                {!id ? "Cadastro" : "Edição"} de Estabelecimento
+                {!id ? "Cadastro" : "Edição"} de Categoria
             </Typography>
             <FormBox>
                 <Container sx={{ margin: '10px 0' }}>
@@ -59,9 +59,9 @@ const CadastroEstabelecimento = () => {
 
 
 
-    const handlerSalvarEstabelecimento = (estabelecimento, callbackFunc) => {
+    const handlerSalvarCategoria = (categoria, callbackFunc) => {
         setLoading(true);
-        console.log(JSON.stringify(estabelecimento));
+        console.log(JSON.stringify(categoria));
 
         let callback = ({ type, error, data }) => {
             if (type == TipoRetorno.FAIL) {
@@ -86,26 +86,25 @@ const CadastroEstabelecimento = () => {
             }
         };
 
-        salvarEstabelecimento(estabelecimento, callback);
+        salvarCategoria(categoria, callback);
     }
 
 
 
 
     const submitHandler = () => {
-        handlerSalvarEstabelecimento(estabelecimento, () => {
-            if (estabelecimento.id === null || estabelecimento.id === undefined || estabelecimento.id <= 0) {
+        handlerSalvarCategoria(categoria, () => {
+            if (categoria.id === null || categoria.id === undefined || categoria.id <= 0) {
                 navigate(-1);
             }
         });
     };
 
-
     return (
         <>
             <Loading data={{ loading: loading }} />
             <Typography fontFamily={"Poppins"} fontWeight={500} variant="p" fontSize={'24px'} >
-                {!id ? "Cadastro" : "Edição"} de Estabelecimento
+                {!id ? "Cadastro" : "Edição"} de Categoria
             </Typography>
 
             <FormBox>
@@ -114,18 +113,18 @@ const CadastroEstabelecimento = () => {
                         type="switch"
                         id="status"
                         label="Status"
-                        value={estabelecimento.status}
+                        value={categoria.status}
                         dispatch={dispatch}
                     />
                 </Container>
                 <Container sx={{ margin: '10px 0' }}>
                     <CInput
                         type="text"
-                        id="name"
-                        label="Nome do estabelecimento"
-                        placeholder="Escreva o nome do estabelecimento"
+                        id="title"
+                        label="Nome da categoria"
+                        placeholder="Escreva o nome da categoria"
                         helperText=""
-                        value={estabelecimento.name}
+                        value={categoria.title}
                         sx={{ width: '80%' }}
                         dispatch={dispatch}
                         error={erros}
@@ -154,4 +153,4 @@ const CadastroEstabelecimento = () => {
     );
 };
 
-export default CadastroEstabelecimento;
+export default CadastroCategoria;

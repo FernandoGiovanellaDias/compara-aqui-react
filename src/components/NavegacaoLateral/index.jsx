@@ -31,7 +31,7 @@ export default function NavegacaoLateral() {
             <NavegacaoItem icon={BookmarksIcon}
                 label='Categorias'
                 ativa={ativa}
-                action={()=>{navigate("/Estabelecimentos")}}
+                action={()=>{navigate("/Categorias")}}
             />
             <NavegacaoItem icon={AppsIcon}
                 label='Produtos'
