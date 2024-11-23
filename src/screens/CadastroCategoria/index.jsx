@@ -10,6 +10,7 @@ import { carregarCategoria, salvarCategoria } from '../../Util/categoriaUtils';
 import { TipoRetorno } from '../../Util/ReduceUtils';
 import Loading from '../../components/Loading';
 import { MsgError } from '../../components/MsgError';
+import FileUploader from '../../components/FileUploader';
 
 const CadastroCategoria = () => {
 
@@ -130,6 +131,13 @@ const CadastroCategoria = () => {
                         error={erros}
                     />
                 </Container>
+                <Container sx={{ margin: '10px 0', display: "inline-flex", flexDirection: "column", gap: 1 }}>
+
+                    <Typography fontFamily={"Poppins"} fontWeight={500} variant="p" fontSize={'10px'} >
+                        Icone:
+                    </Typography>
+                    <FileUploader icon={categoria.icon} campoAtualizado="icon" dispatch={dispatch} />
+                </Container>
                 <Container sx={{ margin: '10px 0' }}>
                     <MsgError error={error} />
                 </Container>
@@ -141,7 +149,7 @@ const CadastroCategoria = () => {
                                 Confirmar
                             </Typography>
                         </ConfirmButton>
-                        <ToDanyButton onClick={()=>{navigate(-1)}}>
+                        <ToDanyButton onClick={() => { navigate(-1) }}>
                             <Typography fontFamily={"Poppins"} fontWeight={500} variant="p" fontSize={'12px'} >
                                 Cancelar
                             </Typography>
